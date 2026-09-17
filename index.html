@@ -672,14 +672,105 @@ footer {
  background:#25D366;color:white;padding:14px 18px;border-radius:50px;
  font-weight:700;box-shadow:0 10px 30px rgba(0,0,0,.35);
 }
-.gallery{padding:70px 6vw;background:var(--deep);overflow:hidden}
-.gallery-track{display:flex;gap:20px;overflow-x:auto;scroll-snap-type:x mandatory}
-.gallery-track img{width:360px;height:230px;object-fit:cover;border-radius:18px;scroll-snap-align:center;border:1px solid rgba(216,200,184,.15)}
+.gallery{
+padding:0;
+background:var(--deep);
+overflow:hidden;
+position:relative;
+}
+
+.gallery-container{
+width:100%;
+position:relative;
+}
+
+.gallery-track{
+display:flex;
+width:100%;
+transition:transform .7s ease;
+}
+
+.gallery-slide{
+min-width:100%;
+height:min(70vh,650px);
+position:relative;
+display:flex;
+align-items:center;
+justify-content:center;
+background:var(--deep);
+}
+
+.gallery-slide img{
+width:100%;
+height:100%;
+object-fit:cover;
+object-position:center;
+display:block;
+}
+
+.gallery-slide::after{
+content:'';
+position:absolute;
+inset:0;
+background:linear-gradient(90deg,rgba(20,20,19,.45),transparent 60%);
+}
+
+.gallery-btn{
+position:absolute;
+top:50%;
+transform:translateY(-50%);
+width:52px;
+height:52px;
+border-radius:50%;
+border:none;
+background:rgba(217,119,87,.9);
+color:white;
+font-size:30px;
+cursor:pointer;
+z-index:5;
+}
+
+.gallery-prev{left:30px;}
+.gallery-next{right:30px;}
+
+.gallery-dots{
+position:absolute;
+bottom:25px;
+left:50%;
+transform:translateX(-50%);
+display:flex;
+gap:10px;
+z-index:5;
+}
+
+.gallery-dot{
+width:10px;
+height:10px;
+border-radius:50%;
+background:rgba(255,255,255,.5);
+cursor:pointer;
+}
+
+.gallery-dot.active{
+background:#D97757;
+}
+
 .shared-box{max-width:900px;margin:auto;display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
 .shared-card{background:var(--deep);padding:28px;border-radius:14px;border:1px solid rgba(216,200,184,.12)}
 .shared-card h3{color:var(--white);margin-bottom:10px}
 .shared-card p{color:var(--muted);font-size:14px}
-@media(max-width:768px){.shared-box{grid-template-columns:1fr}.gallery-track img{width:85vw}}
+
+@media(max-width:768px){
+.shared-box{grid-template-columns:1fr}
+.gallery-track img{
+width:100%;
+}
+.gallery-btn{
+width:38px;
+height:38px;
+font-size:20px;
+}
+}
 
 
 /* OPTIMIZACIÓN MÓVIL SUPERnetfx v6 */
@@ -845,6 +936,22 @@ footer {
     }
 }
 
+
+@media(max-width:768px){
+.gallery-slide{
+height:45vh;
+}
+
+.gallery-btn{
+width:40px;
+height:40px;
+font-size:22px;
+}
+
+.gallery-prev{left:12px;}
+.gallery-next{right:12px;}
+}
+
 </style>
 </head>
 <body>
@@ -888,11 +995,39 @@ footer {
 <div class="sec-eyebrow">Experiencia Claude</div>
 <h2 class="sec-title">Todo lo que puedes hacer con Pro</h2>
 </div>
-<div class="gallery-track">
+<div class="gallery-container">
+
+<button class="gallery-btn gallery-prev" onclick="moveGallery(-1)">‹</button>
+
+<div class="gallery-track" id="galleryTrack">
+
+<div class="gallery-slide">
 <img src="img/inteligente.png" alt="Conversaciones más inteligentes con Claude">
+</div>
+
+<div class="gallery-slide">
 <img src="img/code.png" alt="Claude Code programación con IA">
+</div>
+
+<div class="gallery-slide">
 <img src="img/documentos.png" alt="Análisis de documentos con Claude">
+</div>
+
+<div class="gallery-slide">
 <img src="img/investiga.png" alt="Investigación avanzada con Claude">
+</div>
+
+</div>
+
+<button class="gallery-btn gallery-next" onclick="moveGallery(1)">›</button>
+
+<div class="gallery-dots">
+<span class="gallery-dot active" onclick="moveToGallery(0)"></span>
+<span class="gallery-dot" onclick="moveToGallery(1)"></span>
+<span class="gallery-dot" onclick="moveToGallery(2)"></span>
+<span class="gallery-dot" onclick="moveToGallery(3)"></span>
+</div>
+
 </div>
 </section>
 
@@ -1278,6 +1413,36 @@ window.addEventListener('scroll', () => {
       ? 'var(--white)' : '';
   });
 }, { passive: true });
+
+let galleryIndex = 0;
+
+function showGallery(){
+const track=document.getElementById('galleryTrack');
+if(!track) return;
+
+track.style.transform=`translateX(-${galleryIndex*100}%)`;
+
+document.querySelectorAll('.gallery-dot').forEach((dot,i)=>{
+dot.classList.toggle('active', i===galleryIndex);
+});
+}
+
+function moveGallery(direction){
+galleryIndex += direction;
+if(galleryIndex<0) galleryIndex=3;
+if(galleryIndex>3) galleryIndex=0;
+showGallery();
+}
+
+function moveToGallery(index){
+galleryIndex=index;
+showGallery();
+}
+
+setInterval(()=>{
+moveGallery(1);
+},5000);
+
 </script>
 
 <a class="whatsapp-float" href="https://wa.me/573015813140?text=Hola,%20quiero%20activar%20Claude%20Pro">WhatsApp</a>
