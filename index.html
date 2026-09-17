@@ -1,0 +1,1276 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Claude Pro — Inteligencia que trabaja contigo</title>
+<style>
+/* ─── TOKENS ────────────────────────────────── */
+:root {
+  --ink:      #050C18;
+  --deep:     #091525;
+  --mid:      #0F2440;
+  --rail:     #162E50;
+  --blue:     #1667D0;
+  --sky:      #4DA3FF;
+  --glow:     #7EC8FF;
+  --frost:    #D6EAFF;
+  --text:     #C8DEFF;
+  --muted:    #6A90BE;
+  --white:    #F2F8FF;
+  --serif:    Georgia, 'Times New Roman', serif;
+  --sans:     -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+}
+
+/* ─── RESET ─────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  font-family: var(--sans);
+  background: var(--ink);
+  color: var(--text);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: inherit; text-decoration: none; }
+img { display: block; max-width: 100%; }
+
+/* ─── NAV ────────────────────────────────────── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 6vw;
+  height: 64px;
+  background: rgba(5,12,24,0.88);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(77,163,255,0.08);
+}
+.nav-brand {
+  font-size: 17px; font-weight: 700;
+  color: var(--white);
+  letter-spacing: -0.02em;
+}
+.nav-brand span { color: var(--sky); }
+.nav-links {
+  display: flex; gap: 32px; list-style: none;
+}
+.nav-links a {
+  font-size: 13.5px; color: var(--muted); font-weight: 500;
+  transition: color 0.2s;
+}
+.nav-links a:hover { color: var(--white); }
+.nav-cta {
+  background: var(--blue);
+  color: var(--white);
+  font-size: 13px; font-weight: 600;
+  padding: 9px 20px;
+  border-radius: 6px;
+  transition: background 0.2s;
+}
+.nav-cta:hover { background: #1A7AE8; }
+.nav-mobile-btn { display: none; }
+
+/* ─── HERO ───────────────────────────────────── */
+.hero {
+  min-height: 100vh;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 140px 6vw 100px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.hero-bg {
+  position: absolute; inset: 0; z-index: 0;
+  background:
+    radial-gradient(ellipse 70% 55% at 50% 0%, rgba(22,103,208,0.18) 0%, transparent 70%),
+    radial-gradient(ellipse 45% 40% at 80% 80%, rgba(77,163,255,0.07) 0%, transparent 60%),
+    var(--ink);
+}
+.hero-grid {
+  position: absolute; inset: 0; z-index: 0;
+  background-image:
+    linear-gradient(rgba(77,163,255,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(77,163,255,0.04) 1px, transparent 1px);
+  background-size: 60px 60px;
+  mask-image: radial-gradient(ellipse 80% 60% at 50% 40%, black 30%, transparent 80%);
+}
+.hero-content { position: relative; z-index: 1; max-width: 760px; }
+.hero-kicker {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 12px; font-weight: 600; color: var(--sky);
+  border: 1px solid rgba(77,163,255,0.25);
+  padding: 5px 14px; border-radius: 100px;
+  margin-bottom: 32px;
+  letter-spacing: 0.04em;
+}
+.kicker-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--sky);
+  animation: pulse 2s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.5; transform: scale(0.75); }
+}
+.hero h1 {
+  font-family: var(--serif);
+  font-size: clamp(40px, 7vw, 80px);
+  font-weight: 400;
+  color: var(--white);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  margin-bottom: 24px;
+}
+.hero h1 em {
+  font-style: italic;
+  color: var(--sky);
+}
+.hero-sub {
+  font-size: clamp(15px, 2vw, 18px);
+  color: var(--muted);
+  max-width: 520px;
+  margin: 0 auto 44px;
+  font-weight: 400;
+  line-height: 1.7;
+}
+.hero-actions {
+  display: flex; gap: 14px; justify-content: center; flex-wrap: wrap;
+}
+.btn-primary {
+  background: var(--blue);
+  color: var(--white);
+  font-size: 15px; font-weight: 600;
+  padding: 14px 32px;
+  border-radius: 8px;
+  transition: background 0.2s, transform 0.15s;
+}
+.btn-primary:hover { background: #1A7AE8; transform: translateY(-1px); }
+.btn-ghost {
+  color: var(--frost);
+  font-size: 15px; font-weight: 500;
+  padding: 14px 28px;
+  border-radius: 8px;
+  border: 1px solid rgba(77,163,255,0.2);
+  transition: border-color 0.2s, color 0.2s;
+}
+.btn-ghost:hover { border-color: rgba(77,163,255,0.5); color: var(--white); }
+.hero-scroll {
+  position: absolute; bottom: 36px; left: 50%;
+  transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center; gap: 6px;
+  z-index: 1;
+}
+.scroll-line {
+  width: 1px; height: 42px;
+  background: linear-gradient(to bottom, rgba(77,163,255,0.4), transparent);
+  animation: scrollAnim 1.8s ease-in-out infinite;
+}
+@keyframes scrollAnim {
+  0%, 100% { opacity: 0.3; transform: scaleY(0.7); }
+  50%       { opacity: 0.9; transform: scaleY(1); }
+}
+
+/* ─── STATS BAND ─────────────────────────────── */
+.stats {
+  display: flex; justify-content: center;
+  border-top: 1px solid rgba(77,163,255,0.1);
+  border-bottom: 1px solid rgba(77,163,255,0.1);
+  background: var(--deep);
+}
+.stat-item {
+  flex: 1; max-width: 280px;
+  padding: 40px 32px;
+  text-align: center;
+  position: relative;
+}
+.stat-item + .stat-item::before {
+  content: '';
+  position: absolute; left: 0; top: 20%; bottom: 20%;
+  width: 1px;
+  background: rgba(77,163,255,0.12);
+}
+.stat-num {
+  font-family: var(--serif);
+  font-size: 44px; font-weight: 400;
+  color: var(--white);
+  line-height: 1;
+  margin-bottom: 8px;
+}
+.stat-num sup { font-size: 22px; vertical-align: super; color: var(--sky); }
+.stat-label {
+  font-size: 13px; color: var(--muted); font-weight: 500;
+}
+
+/* ─── SECTION WRAPPER ────────────────────────── */
+.sec {
+  padding: 96px 6vw;
+}
+.sec-alt { background: var(--deep); }
+.sec-dark { background: var(--mid); }
+.sec-header {
+  margin-bottom: 56px;
+}
+.sec-header.centered { text-align: center; }
+.sec-eyebrow {
+  font-size: 12px; font-weight: 600;
+  color: var(--sky); letter-spacing: 0.06em;
+  margin-bottom: 14px;
+}
+.sec-title {
+  font-family: var(--serif);
+  font-size: clamp(28px, 4vw, 44px);
+  color: var(--white);
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: -0.015em;
+}
+.sec-body {
+  font-size: 16px; color: var(--muted);
+  max-width: 540px; line-height: 1.75;
+  margin-top: 16px;
+}
+.sec-header.centered .sec-body { margin: 16px auto 0; }
+
+/* ─── VALUE PROPS ────────────────────────────── */
+.props-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: rgba(77,163,255,0.1);
+  border: 1px solid rgba(77,163,255,0.1);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.prop-cell {
+  background: var(--ink);
+  padding: 36px 32px;
+}
+.prop-icon {
+  font-size: 28px; margin-bottom: 18px;
+  display: block;
+}
+.prop-title {
+  font-size: 18px; font-weight: 700;
+  color: var(--white); margin-bottom: 10px;
+  line-height: 1.3;
+}
+.prop-text {
+  font-size: 14px; color: var(--muted); line-height: 1.7;
+}
+
+/* ─── MODELS ─────────────────────────────────── */
+.models-wrap { max-width: 900px; margin: 0 auto; }
+.model-card {
+  display: grid; grid-template-columns: 240px 1fr;
+  border: 1px solid rgba(77,163,255,0.12);
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 16px;
+  transition: border-color 0.2s;
+}
+.model-card:hover { border-color: rgba(77,163,255,0.3); }
+.model-left {
+  padding: 32px 28px;
+  display: flex; flex-direction: column; justify-content: space-between;
+}
+.model-left.haiku  { background: #0B1C30; }
+.model-left.sonnet { background: #0A1E38; }
+.model-left.opus   { background: #071629; }
+.model-name {
+  font-family: var(--serif);
+  font-size: 24px; color: var(--white);
+  font-weight: 400; line-height: 1.2;
+  margin-bottom: 6px;
+}
+.model-version {
+  font-size: 12px; color: var(--muted); font-weight: 500;
+}
+.model-tier-badge {
+  margin-top: 24px;
+  display: inline-block;
+  font-size: 11px; font-weight: 600;
+  padding: 4px 12px; border-radius: 100px;
+}
+.badge-fast   { background: rgba(34,197,94,0.12); color: #4ADE80; border: 1px solid rgba(34,197,94,0.2); }
+.badge-smart  { background: rgba(77,163,255,0.12); color: var(--sky); border: 1px solid rgba(77,163,255,0.25); }
+.badge-power  { background: rgba(139,92,246,0.12); color: #C084FC; border: 1px solid rgba(139,92,246,0.2); }
+.model-right {
+  padding: 32px 36px;
+  background: var(--deep);
+  display: flex; flex-direction: column; justify-content: center;
+  gap: 14px;
+}
+.model-tagline {
+  font-size: 17px; font-weight: 600;
+  color: var(--white); line-height: 1.35;
+}
+.model-desc {
+  font-size: 14px; color: var(--muted); line-height: 1.7;
+}
+.model-tags {
+  display: flex; flex-wrap: wrap; gap: 8px;
+  margin-top: 4px;
+}
+.model-tag {
+  font-size: 11.5px;
+  background: rgba(77,163,255,0.07);
+  border: 1px solid rgba(77,163,255,0.15);
+  color: var(--text);
+  padding: 3px 10px; border-radius: 4px;
+}
+.model-access {
+  font-size: 12px; color: var(--muted);
+  border-top: 1px solid rgba(77,163,255,0.1);
+  padding-top: 12px;
+  margin-top: 4px;
+}
+.model-access strong { color: var(--sky); }
+
+/* ─── AGENTS ─────────────────────────────────── */
+.agents-grid {
+  display: flex; flex-direction: column; gap: 32px;
+  max-width: 900px; margin: 0 auto;
+}
+.agent-card {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 0;
+  border: 1px solid rgba(77,163,255,0.12);
+  border-radius: 10px;
+  overflow: hidden;
+  transition: border-color 0.2s;
+}
+.agent-card:hover { border-color: rgba(77,163,255,0.28); }
+.agent-card.rev { direction: rtl; }
+.agent-card.rev > * { direction: ltr; }
+.agent-visual {
+  background: var(--mid);
+  padding: 52px 40px;
+  display: flex; flex-direction: column;
+  justify-content: center; align-items: flex-start;
+  gap: 12px;
+  border-right: 1px solid rgba(77,163,255,0.1);
+}
+.agent-card.rev .agent-visual {
+  border-right: none;
+  border-left: 1px solid rgba(77,163,255,0.1);
+}
+.agent-emoji {
+  font-size: 36px; margin-bottom: 8px;
+}
+.agent-vis-name {
+  font-family: var(--serif);
+  font-size: 28px; color: var(--white);
+  font-weight: 400; line-height: 1.2;
+}
+.agent-vis-type {
+  font-size: 11.5px; font-weight: 600;
+  color: var(--sky); letter-spacing: 0.05em;
+  margin-top: 4px;
+}
+.agent-cap-list {
+  margin-top: 16px;
+  display: flex; flex-direction: column; gap: 6px;
+}
+.agent-cap-item {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 12.5px; color: var(--text);
+}
+.cap-check {
+  width: 16px; height: 16px; min-width: 16px;
+  border-radius: 50%;
+  background: rgba(77,163,255,0.12);
+  border: 1px solid rgba(77,163,255,0.25);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 9px; color: var(--sky);
+}
+.agent-info {
+  background: var(--deep);
+  padding: 48px 40px;
+  display: flex; flex-direction: column;
+  justify-content: center; gap: 14px;
+}
+.agent-info-title {
+  font-size: 18px; font-weight: 700;
+  color: var(--white); line-height: 1.3;
+}
+.agent-info-text {
+  font-size: 14px; color: var(--muted); line-height: 1.75;
+}
+.agent-use-case {
+  margin-top: 8px;
+  padding: 16px 18px;
+  background: rgba(22,103,208,0.08);
+  border-left: 3px solid var(--blue);
+  border-radius: 0 6px 6px 0;
+}
+.agent-use-label {
+  font-size: 10.5px; font-weight: 700;
+  color: var(--sky); letter-spacing: 0.06em;
+  margin-bottom: 5px;
+}
+.agent-use-text {
+  font-size: 13px; color: var(--text); line-height: 1.6;
+  font-style: italic;
+}
+
+/* ─── PRICING ────────────────────────────────── */
+.pricing-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr);
+  gap: 16px; max-width: 900px; margin: 0 auto;
+}
+.price-card {
+  border: 1px solid rgba(77,163,255,0.12);
+  border-radius: 10px;
+  overflow: hidden;
+  transition: border-color 0.2s, transform 0.2s;
+}
+.price-card:hover { transform: translateY(-3px); border-color: rgba(77,163,255,0.3); }
+.price-card.featured {
+  border-color: var(--blue);
+  box-shadow: 0 0 40px rgba(22,103,208,0.2);
+}
+.price-head {
+  padding: 28px 28px 20px;
+  background: var(--mid);
+  border-bottom: 1px solid rgba(77,163,255,0.1);
+}
+.price-card.featured .price-head { background: var(--blue); }
+.price-plan-name {
+  font-size: 13px; font-weight: 700;
+  color: var(--muted); margin-bottom: 16px;
+  letter-spacing: 0.04em;
+}
+.price-card.featured .price-plan-name { color: rgba(255,255,255,0.75); }
+.price-amount {
+  font-family: var(--serif);
+  font-size: 48px; color: var(--white);
+  font-weight: 400; line-height: 1;
+}
+.price-amount sup {
+  font-size: 22px; vertical-align: super;
+  font-family: var(--sans);
+}
+.price-period {
+  font-size: 12px; color: var(--muted);
+  margin-top: 8px;
+}
+.price-card.featured .price-period { color: rgba(255,255,255,0.65); }
+.price-body {
+  padding: 24px 28px;
+  background: var(--deep);
+}
+.price-desc {
+  font-size: 13.5px; color: var(--muted);
+  line-height: 1.6; margin-bottom: 20px;
+}
+.price-features {
+  list-style: none;
+  display: flex; flex-direction: column; gap: 10px;
+}
+.price-features li {
+  display: flex; align-items: flex-start; gap: 10px;
+  font-size: 13px; color: var(--text); line-height: 1.5;
+}
+.feat-check {
+  color: var(--sky); font-size: 12px;
+  margin-top: 2px; flex-shrink: 0;
+}
+.feat-check.dim { color: var(--muted); }
+.price-cta {
+  display: block;
+  margin-top: 24px;
+  padding: 12px 20px;
+  border-radius: 7px;
+  font-size: 14px; font-weight: 600;
+  text-align: center;
+  transition: background 0.2s;
+}
+.cta-main {
+  background: var(--white); color: var(--ink);
+}
+.cta-main:hover { background: var(--frost); }
+.cta-outline {
+  border: 1px solid rgba(77,163,255,0.25);
+  color: var(--frost);
+}
+.cta-outline:hover { border-color: rgba(77,163,255,0.5); }
+
+/* ─── LIMITS ─────────────────────────────────── */
+.limits-container {
+  max-width: 800px; margin: 0 auto;
+}
+.limit-row {
+  display: grid; grid-template-columns: 180px 1fr;
+  gap: 0;
+  border: 1px solid rgba(77,163,255,0.1);
+  border-radius: 7px;
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+.limit-label {
+  background: var(--mid);
+  padding: 20px 22px;
+  font-size: 14px; font-weight: 600; color: var(--white);
+  display: flex; align-items: center;
+  border-right: 1px solid rgba(77,163,255,0.1);
+}
+.limit-content {
+  background: var(--deep);
+  padding: 20px 24px;
+}
+.limit-title {
+  font-size: 13.5px; color: var(--text); font-weight: 500;
+  margin-bottom: 4px;
+}
+.limit-desc {
+  font-size: 12.5px; color: var(--muted); line-height: 1.6;
+}
+
+/* ─── FAQ ────────────────────────────────────── */
+.faq-list {
+  max-width: 720px; margin: 0 auto;
+  display: flex; flex-direction: column; gap: 8px;
+}
+.faq-item {
+  border: 1px solid rgba(77,163,255,0.12);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.faq-q {
+  width: 100%; text-align: left;
+  padding: 20px 24px;
+  background: var(--deep);
+  color: var(--white);
+  font-size: 15px; font-weight: 600;
+  cursor: pointer;
+  display: flex; justify-content: space-between; align-items: center;
+  gap: 16px;
+  border: none; outline: none;
+  transition: background 0.15s;
+}
+.faq-q:hover { background: var(--mid); }
+.faq-arrow {
+  color: var(--sky); font-size: 18px;
+  transition: transform 0.25s;
+  flex-shrink: 0;
+}
+.faq-item.open .faq-arrow { transform: rotate(180deg); }
+.faq-a {
+  max-height: 0; overflow: hidden;
+  transition: max-height 0.3s ease;
+  background: var(--ink);
+}
+.faq-item.open .faq-a { max-height: 300px; }
+.faq-a-inner {
+  padding: 20px 24px 24px;
+  font-size: 14px; color: var(--muted); line-height: 1.75;
+}
+
+/* ─── FINAL CTA ──────────────────────────────── */
+.final-cta {
+  text-align: center;
+  padding: 120px 6vw;
+  background: linear-gradient(180deg, var(--mid) 0%, var(--ink) 100%);
+  position: relative; overflow: hidden;
+}
+.final-cta::before {
+  content: '';
+  position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+  width: 600px; height: 2px;
+  background: linear-gradient(90deg, transparent, var(--blue), transparent);
+}
+.final-cta h2 {
+  font-family: var(--serif);
+  font-size: clamp(32px, 5vw, 58px);
+  color: var(--white);
+  font-weight: 400;
+  line-height: 1.15;
+  margin-bottom: 20px;
+  letter-spacing: -0.02em;
+}
+.final-cta p {
+  font-size: 17px; color: var(--muted);
+  max-width: 460px; margin: 0 auto 48px;
+  line-height: 1.7;
+}
+.final-price-note {
+  margin-top: 20px;
+  font-size: 13px; color: var(--muted);
+}
+
+/* ─── FOOTER ─────────────────────────────────── */
+footer {
+  padding: 36px 6vw;
+  border-top: 1px solid rgba(77,163,255,0.08);
+  display: flex; justify-content: space-between; align-items: center;
+  flex-wrap: wrap; gap: 12px;
+}
+.footer-brand {
+  font-size: 15px; font-weight: 700;
+  color: var(--white);
+}
+.footer-brand span { color: var(--sky); }
+.footer-note {
+  font-size: 12px; color: var(--muted);
+}
+
+/* ─── ENTRANCE ANIMATION ─────────────────────── */
+.hero-content {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: heroIn 0.9s cubic-bezier(0.22,1,0.36,1) 0.15s forwards;
+}
+@keyframes heroIn {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ─── RESPONSIVE ─────────────────────────────── */
+@media (max-width: 768px) {
+  .nav-links { display: none; }
+  .nav-cta { display: none; }
+  nav { padding: 0 20px; }
+
+  .stats { flex-direction: column; }
+  .stat-item + .stat-item::before { top: 0; bottom: auto; left: 20%; right: 20%; width: auto; height: 1px; }
+
+  .props-grid { grid-template-columns: 1fr; }
+
+  .model-card { grid-template-columns: 1fr; }
+  .model-left { border-bottom: 1px solid rgba(77,163,255,0.1); }
+
+  .agent-card { grid-template-columns: 1fr; }
+  .agent-card.rev { direction: ltr; }
+  .agent-visual { border-right: none; border-bottom: 1px solid rgba(77,163,255,0.1); }
+  .agent-card.rev .agent-visual { border-left: none; border-bottom: 1px solid rgba(77,163,255,0.1); }
+
+  .pricing-grid { grid-template-columns: 1fr; max-width: 400px; }
+
+  .limit-row { grid-template-columns: 1fr; }
+  .limit-label { border-right: none; border-bottom: 1px solid rgba(77,163,255,0.1); }
+
+  .sec { padding: 64px 20px; }
+  footer { padding: 28px 20px; flex-direction: column; text-align: center; }
+}
+
+/* ─── SUPERNETFX CLAUDE THEME OVERRIDE ─── */
+:root{
+ --ink:#141413;
+ --deep:#1C1917;
+ --mid:#29231F;
+ --rail:#352B25;
+ --blue:#D97757;
+ --sky:#E8896C;
+ --glow:#F0A58D;
+ --frost:#F5F0E8;
+ --text:#D8C8B8;
+ --muted:#A69B90;
+ --white:#FDF8F1;
+}
+.whatsapp-float{
+ position:fixed;right:22px;bottom:22px;z-index:999;
+ background:#25D366;color:white;padding:14px 18px;border-radius:50px;
+ font-weight:700;box-shadow:0 10px 30px rgba(0,0,0,.35);
+}
+.gallery{padding:70px 6vw;background:var(--deep);overflow:hidden}
+.gallery-track{display:flex;gap:20px;overflow-x:auto;scroll-snap-type:x mandatory}
+.gallery-track img{width:360px;height:230px;object-fit:cover;border-radius:18px;scroll-snap-align:center;border:1px solid rgba(216,200,184,.15)}
+.shared-box{max-width:900px;margin:auto;display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.shared-card{background:var(--deep);padding:28px;border-radius:14px;border:1px solid rgba(216,200,184,.12)}
+.shared-card h3{color:var(--white);margin-bottom:10px}
+.shared-card p{color:var(--muted);font-size:14px}
+@media(max-width:768px){.shared-box{grid-template-columns:1fr}.gallery-track img{width:85vw}}
+
+
+/* OPTIMIZACIÓN MÓVIL SUPERnetfx v6 */
+@media (max-width: 768px) {
+
+  body {
+    overflow-x: hidden;
+  }
+
+  nav {
+    height: 60px;
+    padding: 0 16px;
+  }
+
+  .nav-brand {
+    font-size: 15px;
+  }
+
+  .hero {
+    min-height: auto;
+    padding: 110px 20px 70px;
+  }
+
+  .hero h1 {
+    font-size: 42px;
+    line-height: 1.12;
+  }
+
+  .hero-sub {
+    font-size: 15px;
+    line-height: 1.6;
+    margin-bottom: 32px;
+  }
+
+  .hero-actions {
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .btn-primary,
+  .btn-ghost {
+    width: 100%;
+    text-align: center;
+  }
+
+  .stats {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .stat-item {
+    max-width: none;
+    padding: 28px 20px;
+  }
+
+  .sec {
+    padding: 55px 18px;
+  }
+
+  .sec-title {
+    font-size: 32px;
+  }
+
+  .sec-body {
+    font-size: 15px;
+  }
+
+  .props-grid,
+  .pricing-grid {
+    gap: 16px;
+  }
+
+  .prop-cell {
+    padding: 28px 22px;
+  }
+
+  .price-card {
+    width: 100%;
+  }
+
+  .price-head {
+    padding: 26px 22px;
+  }
+
+  .price-amount {
+    font-size: 42px;
+  }
+
+  .price-body {
+    padding: 24px 22px;
+  }
+
+  .price-features li {
+    font-size: 14px;
+  }
+
+  .model-card,
+  .agent-card {
+    border-radius: 14px;
+  }
+
+  .model-left,
+  .model-right,
+  .agent-visual,
+  .agent-info {
+    padding: 28px 22px;
+  }
+
+  .faq-q {
+    padding: 18px;
+    font-size: 14px;
+  }
+
+  .faq-a-inner {
+    padding: 18px;
+    font-size: 14px;
+  }
+
+  .final-cta {
+    padding: 70px 20px;
+  }
+
+  .final-cta h2 {
+    font-size: 36px;
+  }
+
+  footer {
+    font-size: 12px;
+  }
+
+}
+
+/* Botón WhatsApp móvil fijo */
+.whatsapp-float {
+  position: fixed;
+  bottom: 20px;
+  right: 18px;
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: #25D366;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  z-index: 999;
+  box-shadow: 0 8px 20px rgba(0,0,0,.35);
+}
+
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-brand">Claude <span>Pro</span></div>
+  <ul class="nav-links">
+    <li><a href="#modelos">Modelos</a></li>
+    <li><a href="#agentes">Agentes</a></li>
+    <li><a href="#precios">Precios</a></li>
+    <li><a href="#faq">FAQ</a></li>
+  </ul>
+  <a href="#precios" class="nav-cta">Ver planes</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-content">
+    <div class="hero-kicker">
+      <span class="kicker-dot"></span>
+      Anthropic · Claude.ai · 2026
+    </div>
+    <h1>Inteligencia que<br><em>trabaja contigo</em></h1>
+    <p class="hero-sub">Claude Pro es el plan profesional de Anthropic. Accede a los modelos más capaces, herramientas agénticas y el espacio de trabajo con IA más completo del mercado — por $20 al mes.</p>
+    <div class="hero-actions">
+      <a href="#precios" class="btn-primary">Comenzar con Pro</a>
+      <a href="#agentes" class="btn-ghost">Ver capacidades</a>
+    </div>
+  </div>
+  <div class="hero-scroll">
+    <div class="scroll-line"></div>
+  </div>
+</section>
+
+
+<section class="gallery">
+<div class="sec-header centered">
+<div class="sec-eyebrow">Experiencia Claude</div>
+<h2 class="sec-title">Todo lo que puedes hacer con Pro</h2>
+</div>
+<div class="gallery-track">
+<img src="img/claude-1.jpg" alt="Claude Pro">
+<img src="img/claude-2.jpg" alt="Claude Code">
+<img src="img/claude-3.jpg" alt="IA profesional">
+<img src="img/claude-4.jpg" alt="Trabajo con IA">
+</div>
+</section>
+
+<!-- STATS -->
+<div class="stats">
+  <div class="stat-item">
+    <div class="stat-num" style="font-size:36px;"><sup style="font-size:18px;">$</sup>40.000</div>
+    <div class="stat-label">por mes · plan Pro · 1 dispositivo</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num">3</div>
+    <div class="stat-label">modelos disponibles</div>
+  </div>
+  <div class="stat-item">
+    <div class="stat-num">5</div>
+    <div class="stat-label">agentes de IA incluidos</div>
+  </div>
+</div>
+
+<!-- VALUE PROPS -->
+<section class="sec" id="why">
+  <div class="sec-header centered">
+    <div class="sec-eyebrow">Por qué Pro</div>
+    <h2 class="sec-title">Más que un asistente.<br>Un socio de trabajo.</h2>
+    <p class="sec-body">Pro desbloquea capacidades que el plan gratuito no tiene: modelos de mayor potencia, proyectos ilimitados y herramientas que actúan de forma autónoma.</p>
+  </div>
+  <div class="props-grid">
+    <div class="prop-cell">
+      <span class="prop-icon">⚡</span>
+      <div class="prop-title">5× más mensajes</div>
+      <p class="prop-text">Cuota de uso ampliada con reinicio cada 5 horas. Trabaja todo el día sin interrupciones en la mayoría de flujos profesionales.</p>
+    </div>
+    <div class="prop-cell">
+      <span class="prop-icon">🧠</span>
+      <div class="prop-title">Acceso a Opus 4.8</div>
+      <p class="prop-text">El modelo más capaz de Anthropic para razonamiento complejo, análisis profundo y código avanzado. Exclusivo de planes de pago.</p>
+    </div>
+    <div class="prop-cell">
+      <span class="prop-icon">🤖</span>
+      <div class="prop-title">Agentes autónomos</div>
+      <p class="prop-text">Claude puede buscar en la web, ejecutar código, gestionar archivos y completar proyectos complejos sin supervisión constante.</p>
+    </div>
+  </div>
+</section>
+
+<!-- MODELS -->
+<section class="sec sec-alt" id="modelos">
+  <div class="sec-header centered">
+    <div class="sec-eyebrow">Modelos</div>
+    <h2 class="sec-title">El modelo adecuado para cada tarea</h2>
+    <p class="sec-body">Claude Pro da acceso a tres modelos con distinto perfil de velocidad, capacidad y coste de uso. Eleges cuál usar en cada momento.</p>
+  </div>
+  <div class="models-wrap">
+
+    <div class="model-card">
+      <div class="model-left haiku">
+        <div>
+          <div class="model-name">Haiku</div>
+          <div class="model-version">versión 4.5</div>
+        </div>
+        <div class="model-tier-badge badge-fast">Rápido</div>
+      </div>
+      <div class="model-right">
+        <div class="model-tagline">Velocidad máxima para tareas cotidianas</div>
+        <div class="model-desc">Diseñado para respuestas inmediatas y consultas de baja complejidad. Consume la menor cantidad de cuota por mensaje, ideal para sesiones de trabajo intensivo donde se necesitan muchas respuestas cortas.</div>
+        <div class="model-tags">
+          <span class="model-tag">Respuestas rápidas</span>
+          <span class="model-tag">Resúmenes breves</span>
+          <span class="model-tag">Consultas simples</span>
+          <span class="model-tag">Baja cuota por turno</span>
+        </div>
+        <div class="model-access">Disponible en <strong>Free · Pro · Max</strong></div>
+      </div>
+    </div>
+
+    <div class="model-card">
+      <div class="model-left sonnet">
+        <div>
+          <div class="model-name">Sonnet</div>
+          <div class="model-version">versión 5 · predeterminado</div>
+        </div>
+        <div class="model-tier-badge badge-smart">Equilibrado</div>
+      </div>
+      <div class="model-right">
+        <div class="model-tagline">El modelo de referencia para trabajo profesional</div>
+        <div class="model-desc">Modelo por defecto desde julio de 2026. Cubre el 90% de los casos de uso profesionales: escritura, análisis de documentos, programación, investigación y tareas de múltiples pasos. El mejor punto de equilibrio entre capacidad y cuota consumida.</div>
+        <div class="model-tags">
+          <span class="model-tag">Escritura y redacción</span>
+          <span class="model-tag">Código</span>
+          <span class="model-tag">Análisis de documentos</span>
+          <span class="model-tag">Tareas multistep</span>
+        </div>
+        <div class="model-access">Disponible en <strong>Free · Pro · Max</strong></div>
+      </div>
+    </div>
+
+    <div class="model-card">
+      <div class="model-left opus">
+        <div>
+          <div class="model-name">Opus</div>
+          <div class="model-version">versión 4.8 · más potente</div>
+        </div>
+        <div class="model-tier-badge badge-power">Potencia máxima</div>
+      </div>
+      <div class="model-right">
+        <div class="model-tagline">Razonamiento de nivel experto para desafíos complejos</div>
+        <div class="model-desc">La mayor capacidad de razonamiento disponible para el público. Recomendado para decisiones estratégicas, problemas de lógica avanzada, código complejo o cualquier tarea donde el mejor resultado posible justifica un mayor consumo de cuota.</div>
+        <div class="model-tags">
+          <span class="model-tag">Razonamiento profundo</span>
+          <span class="model-tag">Código avanzado</span>
+          <span class="model-tag">Análisis estratégico</span>
+          <span class="model-tag">Contexto de 1M tokens</span>
+        </div>
+        <div class="model-access">Disponible en <strong>Pro (con límite) · Max</strong></div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- AGENTS -->
+<section class="sec" id="agentes">
+  <div class="sec-header centered">
+    <div class="sec-eyebrow">Agentes de IA</div>
+    <h2 class="sec-title">Claude actúa.<br>Tú decides.</h2>
+    <p class="sec-body">Los agentes de Claude van más allá de la conversación: navegan la web, escriben código, gestionan archivos y colaboran con tu equipo de forma autónoma.</p>
+  </div>
+  <div class="agents-grid">
+
+    <div class="agent-card">
+      <div class="agent-visual">
+        <div class="agent-emoji">🔍</div>
+        <div class="agent-vis-name">Research</div>
+        <div class="agent-vis-type">Agente de investigación</div>
+        <div class="agent-cap-list">
+          <div class="agent-cap-item"><span class="cap-check">✓</span>Búsqueda web autónoma</div>
+          <div class="agent-cap-item"><span class="cap-check">✓</span>Consulta múltiples fuentes</div>
+          <div class="agent-cap-item"><span class="cap-check">✓</span>Informe con referencias</div>
+        </div>
+      </div>
+      <div class="agent-info">
+        <div class="agent-info-title">Investigación profunda sin trabajo manual</div>
+        <div class="agent-info-text">Claude navega la web de forma independiente, contrasta información de múltiples fuentes y entrega un informe detallado y fundamentado. El usuario recibe el análisis sin tener que hacer una sola búsqueda manual.</div>
+        <div class="agent-use-case">
+          <div class="agent-use-label">Caso de uso</div>
+          <div class="agent-use-text">"Investiga las últimas tendencias en IA generativa para empresas y prepara un informe con las 5 principales."</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="agent-card rev">
+      <div class="agent-visual">
+        <div class="agent-emoji">💻</div>
+        <div class="agent-vis-name">Claude Code</div>
+        <div class="agent-vis-type">Agente de programación</div>
+        <div class="agent-cap-list">
+          <div class="agent-cap-item"><span class="cap-check">✓</span>Lee y escribe archivos</div>
+          <div class="agent-cap-item"><span class="cap-check">✓</span>Ejecuta comandos</div>
+          <div class="agent-cap-item"><span class="cap-check">✓</span>Integración con git</div>
+        </div>
+      </div>
+      <div class="agent-info">
+        <div class="agent-info-title">Tu ingeniero de software autónomo</div>
+        <div class="agent-info-text">Herramienta de línea de comandos que da a Claude acceso al entorno de desarrollo: escribe código, ejecuta pruebas, corrige errores, hace commits y gestiona repositorios git dentro de los límites que el usuario define.</div>
+        <div class="agent-use-case">
+          <div class="agent-use-label">Caso de uso</div>
+          <div class="agent-use-text">"Revisa todos los archivos del proyecto, corrige los errores de tipado y crea un PR con los cambios."</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="agent-card">
+      <div class="agent-visual">
+        <div class="agent-emoji">🗂️</div>
+        <div class="agent-vis-name">Cowork</div>
+        <div class="agent-vis-type">Agente de escritorio</div>
+        <div class="agent-cap-list">
+          <div class="agent-cap-item"><span class="cap-check">✓</span>Gestión de archivos</div>
+          <div class="agent-cap-item"><span class="cap-check">✓</span>Flujos multistep</div>
+          <div class="agent-cap-item"><span class="cap-check">✓</span>Trabajo sin supervisión</div>
+        </div>
+      </div>
+      <div class="agent-info">
+        <div class="agent-info-title">Automatización de tareas en tu escritorio</div>
+        <div class="agent-info-text">Aplicación de escritorio para no desarrolladores que permite a Claude gestionar archivos, organizar carpetas, procesar documentos y coordinar flujos de trabajo complejos de forma autónoma, sin necesidad de código.</div>
+        <div class="agent-use-case">
+          <div class="agent-use-label">Caso de uso</div>
+          <div class="agent-use-text">"Organiza todos los informes de la carpeta Descargas por mes, extrae los datos clave y crea un resumen."</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="agent-card rev">
+      <div class="agent-visual">
+        <div class="agent-emoji">💬</div>
+        <div class="agent-vis-name">Claude Tag</div>
+        <div class="agent-vis-type">Agente colaborativo en Slack</div>
+        <div class="agent-cap-list">
+          <div class="agent-cap-item"><span class="cap-check">✓</span>Integración nativa Slack</div>
+          <div class="agent-cap-item"><span class="cap-check">✓</span>Delegación en equipo</div>
+          <div class="agent-cap-item"><span class="cap-check">✓</span>Contexto compartido</div>
+        </div>
+      </div>
+      <div class="agent-info">
+        <div class="agent-info-title">Delega tareas a Claude directamente en Slack</div>
+        <div class="agent-info-text">Integración que permite a cualquier miembro del equipo etiquetar @Claude en un canal de Slack para que analice, redacte, busque o complete tareas específicas dentro del contexto de la conversación grupal.</div>
+        <div class="agent-use-case">
+          <div class="agent-use-label">Caso de uso</div>
+          <div class="agent-use-text">"@Claude resume este hilo y propón los próximos pasos para el equipo de producto."</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="agent-card">
+      <div class="agent-visual">
+        <div class="agent-emoji">🌐</div>
+        <div class="agent-vis-name">Claude en Chrome</div>
+        <div class="agent-vis-type">Agente de navegador</div>
+        <div class="agent-cap-list">
+          <div class="agent-cap-item"><span class="cap-check">✓</span>Lectura de páginas web</div>
+          <div class="agent-cap-item"><span class="cap-check">✓</span>Completa formularios</div>
+          <div class="agent-cap-item"><span class="cap-check">✓</span>Automatización web</div>
+        </div>
+      </div>
+      <div class="agent-info">
+        <div class="agent-info-title">Navega y actúa en la web en tu nombre</div>
+        <div class="agent-info-text">Extensión de Chrome que permite a Claude leer el contenido de cualquier página, hacer clic, completar formularios y realizar acciones en el navegador de forma autónoma. Ideal para automatizar tareas web repetitivas.</div>
+        <div class="agent-use-case">
+          <div class="agent-use-label">Caso de uso</div>
+          <div class="agent-use-text">"Busca en este sitio los precios de los 10 productos más vendidos y crea una tabla comparativa."</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="sec sec-alt" id="precios">
+  <div class="sec-header centered">
+    <div class="sec-eyebrow">Planes y precios</div>
+    <h2 class="sec-title">Elige el acceso que necesitas</h2>
+    <p class="sec-body">Selecciona el plan de Claude Pro que se adapta a tu forma de trabajo.</p>
+  </div>
+
+  <div class="pricing-grid">
+
+    <div class="price-card">
+      <div class="price-head">
+        <div class="price-plan-name">PLAN PERSONAL</div>
+        <div class="price-amount"><sup>$</sup>40.000</div>
+        <div class="price-period">por 30 días · 1 dispositivo</div>
+      </div>
+
+      <div class="price-body">
+        <div class="price-desc">
+          Ideal para uso individual, creación de contenido, estudio, programación y productividad.
+        </div>
+
+        <ul class="price-features">
+          <li><span class="feat-check">✓</span>Acceso a Claude Pro</li>
+          <li><span class="feat-check">✓</span>1 dispositivo registrado</li>
+          <li><span class="feat-check">✓</span>Cuenta renovable cada 30 días</li>
+          <li><span class="feat-check">✓</span>Soporte por WhatsApp</li>
+        </ul>
+
+        <a href="https://wa.me/573015813140?text=Hola,%20quiero%20activar%20Claude%20Pro%20Plan%20Personal%20de%20$40.000" class="price-cta cta-outline">
+          Activar Plan Personal
+        </a>
+      </div>
+    </div>
+
+
+    <div class="price-card featured">
+      <div class="price-head">
+        <div class="price-plan-name">PLAN DUO</div>
+        <div class="price-amount"><sup>$</sup>60.000</div>
+        <div class="price-period">por 30 días · 2 dispositivos</div>
+      </div>
+
+      <div class="price-body">
+        <div class="price-desc">
+          Para quienes necesitan utilizar Claude Pro en dos dispositivos registrados.
+        </div>
+
+        <ul class="price-features">
+          <li><span class="feat-check">✓</span>Acceso a Claude Pro</li>
+          <li><span class="feat-check">✓</span>2 dispositivos registrados</li>
+          <li><span class="feat-check">✓</span>Cuenta renovable cada 30 días</li>
+          <li><span class="feat-check">✓</span>Soporte por WhatsApp</li>
+        </ul>
+
+        <a href="https://wa.me/573015813140?text=Hola,%20quiero%20activar%20Claude%20Pro%20Plan%20Duo%20de%20$60.000" class="price-cta cta-main">
+          Activar Plan Duo
+        </a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="sec" id="faq">
+  <div class="sec-header centered">
+    <div class="sec-eyebrow">Preguntas frecuentes</div>
+    <h2 class="sec-title">Respuestas directas</h2>
+  </div>
+  <div class="faq-list">
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        ¿Qué modelo debo usar para trabajo diario?
+        <span class="faq-arrow">▾</span>
+      </button>
+      <div class="faq-a">
+        <div class="faq-a-inner">
+          <strong style="color:var(--text)">Sonnet 5 para la mayoría de tareas.</strong> Cubre escritura, código, análisis de documentos y conversaciones complejas con un buen balance entre capacidad y cuota consumida. Reserva Opus para los problemas que realmente requieran el razonamiento más profundo, y usa Haiku cuando solo necesitas respuestas rápidas o simples. Esta estrategia maximiza el número de mensajes disponibles en tu sesión diaria.
+        </div>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        ¿Cómo funciona la vigencia de la cuenta?
+        <span class="faq-arrow">▾</span>
+      </button>
+      <div class="faq-a">
+        <div class="faq-a-inner">
+          La cuenta tiene una vigencia de 30 días desde la activación. Al finalizar este periodo puedes renovarla para continuar utilizando el servicio.
+        </div>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        ¿Los agentes consumen más cuota que las conversaciones normales?
+        <span class="faq-arrow">▾</span>
+      </button>
+      <div class="faq-a">
+        <div class="faq-a-inner">
+          Sí. Las tareas agénticas — especialmente Research y Claude Code — consumen más cuota porque implican múltiples pasos internos, llamadas a herramientas y contexto extendido. Research puede equivaler a varios mensajes en una sola consulta, dependiendo de la profundidad de la investigación. Para uso intensivo de agentes durante todo el día, Max es más adecuado que Pro, ya que proporciona la capacidad necesaria sin interrupciones frecuentes.
+        </div>
+      </div>
+    </div>
+
+    
+
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="final-cta">
+  <h2>Empieza hoy.<br>Nota la diferencia mañana.</h2>
+  <p>Claude Pro desde $40.000 al mes para 1 dispositivo y $60.000 para 2 dispositivos. Vigencia de 30 días y cuenta renovable.</p>
+  <a href="https://wa.me/573015813140?text=Hola,%20quiero%20activar%20Claude%20Pro" class="btn-primary" style="font-size:16px; padding:16px 40px;">Activar Claude Pro</a>
+  <div class="final-price-note">Plan Personal $40.000 · Plan Duo $60.000 · Vigencia 30 días · Cuenta renovable</div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand">Claude <span>Pro</span> — Anthropic</div>
+  <div class="footer-note">Precios en COP · 1 dispositivo por suscripción · anthropic.com</div>
+</footer>
+
+<script>
+function toggleFaq(btn) {
+  const item = btn.closest('.faq-item');
+  const wasOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+  if (!wasOpen) item.classList.add('open');
+}
+
+// Nav active state on scroll
+const sections = document.querySelectorAll('section[id], div[id]');
+const navLinks = document.querySelectorAll('.nav-links a');
+window.addEventListener('scroll', () => {
+  let current = '';
+  sections.forEach(s => {
+    if (window.scrollY >= s.offsetTop - 100) current = s.id;
+  });
+  navLinks.forEach(a => {
+    a.style.color = a.getAttribute('href') === '#' + current
+      ? 'var(--white)' : '';
+  });
+}, { passive: true });
+</script>
+
+<a class="whatsapp-float" href="https://wa.me/573015813140?text=Hola,%20quiero%20activar%20Claude%20Pro">WhatsApp</a>
+
+<a href="https://wa.me/573015813140?text=Hola,%20quiero%20información%20sobre%20Claude%20Pro"
+class="whatsapp-float" aria-label="WhatsApp">
+  ☎
+</a>
+
+</body>
+</html>
